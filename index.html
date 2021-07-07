@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="css/resetstyles.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <title>Library</title>
+</head>
+<body>
+
+<h1>Library</h1>
+
+<div class="main">
+
+    <ul class="menu">
+        <li data-btn="books">Books</li>
+        <li data-btn="visitors">Visitors</li>
+        <li data-btn="cards">Cards</li>
+        <li data-btn="statistics">Statistics</li>
+    </ul>
+
+    <div id="books">
+
+        <div class="books-head">
+            <h2>All Books</h2>
+            <button id="add-btn-books">Add books</button>
+        </div>
+
+        <div class="main">
+
+            <div>
+                <label for="sort-books">Sort by:</label>
+                <select id="sort-books">
+                    <option>Id</option>
+                    <option>Name</option>
+                </select>
+
+                <button id="sort-btn-books">Sort</button>
+            </div>
+
+            <div>
+                <label for="search-books">Search:</label>
+                <input type="text" id="search-books">
+
+                <button id="search-books-btn">Search</button>
+            </div>
+
+        </div>
+
+        <div>
+            <table></table>
+        </div>
+
+    </div>
+
+    <div id="visitors" hidden>
+
+        <div class="visitors-head">
+            <h2>All Visitors</h2>
+            <button id="add-btn-visitors">Add visitor</button>
+        </div>
+
+        <div class="main">
+
+            <div>
+                <label for="sort-visitors">Sort by:</label>
+                <select id="sort-visitors">
+                    <option>Id</option>
+                    <option>Name</option>
+                </select>
+
+                <button id="sort-btn-visitors">Sort</button>
+            </div>
+
+            <div>
+                <label for="search-visitors">Search:</label>
+                <input type="text" id="search-visitors">
+
+                <button id="search-visitors-btn">Search</button>
+            </div>
+
+        </div>
+
+        <div>
+            <table></table>
+        </div>
+
+    </div>
+
+    <div id="cards" hidden>
+
+        <div class="cards-head">
+            <h2>All Сards</h2>
+            <button id="give-out-btn">Give out book</button>
+            <button id="take-btn">Take book</button>
+        </div>
+
+        <div class="main">
+
+            <div>
+                <label for="sort-cards">Sort by:</label>
+                <select id="sort-cards">
+                    <option>Id</option>
+                    <option>Name</option>
+                </select>
+
+                <button id="sort-btn-cards">Sort</button>
+            </div>
+
+            <div>
+                <label for="search-cards">Search:</label>
+                <input type="text" id="search-cards">
+                <button id="search-cards-btn">Search</button>
+            </div>
+
+        </div>
+
+        <div>
+            <table></table>
+        </div>
+
+    </div>
+
+    <div id="statistics" hidden>
+
+        <div class="statistics-head">
+            <h2>All Statistics</h2>
+            <button id="popular-btn">Popular books</button>
+            <button id="active-users-btn">Active users</button>
+        </div>
+
+        <div class="main">
+
+            <div>
+                <label for="sort-statistics">Sort by:</label>
+                <select id="sort-statistics">
+                    <option>Id</option>
+                    <option>Name</option>
+                </select>
+
+                <button id="sort-btn-statistics">Sort</button>
+            </div>
+
+            <div>
+                <label for="search-statistics">Search:</label>
+                <input type="text" id="search-statistics">
+                <button id="search-statistics-btn">Search</button>
+            </div>
+
+        </div>
+
+        <div>
+            <table></table>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

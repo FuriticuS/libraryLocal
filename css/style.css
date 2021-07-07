@@ -1,0 +1,74 @@
+h1 {
+    font-family: Arial, sans-serif;
+    font-size: 40px;
+    margin-bottom: 50px;
+    font-weight: 800;
+}
+
+h2 {
+    font-family: Arial, sans-serif;
+}
+
+button {
+    cursor: pointer;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu {
+    display: flex;
+    flex-direction: row;
+    width: 500px;
+    height: 30px;
+    background: #4f4f4f;
+    padding: 0 10px;
+}
+
+.menu li{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 1px solid #8f8f8f;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    cursor: pointer;
+}
+
+.menu li:hover{
+    background: #7f7f7f;
+    transition: all .5s ease;
+}
+
+#books,
+#visitors,
+#cards,
+#statistics{
+    width: 500px;
+    padding: 0 0 0 10px;
+    margin-top: 35px;
+}
+
+#books .books-head,
+#visitors .visitors-head,
+#cards .cards-head,
+#statistics .statistics-head {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+#books .main,
+#visitors .main,
+#cards .main,
+#statistics .main{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
