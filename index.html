@@ -51,8 +51,34 @@
 
         </div>
 
+        <form class="form-book">
+            <input type="text" name="name" placeholder="name">
+            <input type="text" name="author" placeholder="author">
+            <input type="text" name="year" placeholder="year">
+            <input type="text" name="who" placeholder="who">
+            <input type="text" name="pages" placeholder="pages">
+            <input type="text" name="amount" placeholder="amount">
+
+            <button id="apply-book">Apply</button>
+        </form>
+
         <div>
-            <table></table>
+            <table id="table-books">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Author</th>
+                        <th>Year</th>
+                        <th>Who</th>
+                        <th>Pages</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
         </div>
 
     </div>
@@ -161,6 +187,9 @@
 
 </div>
 
+<script src="js/book.js"></script>
+<script src="js/visitors.js"></script>
+<script src="js/cards.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

@@ -55,4 +55,14 @@ function bookHidden(targetAttr){
 
 }
 
+window.addEventListener('DOMContentLoaded', () => {
+    const books = new Books();
+
+    console.log(books);
+});
+
+window.addEventListener('unload', () => {
+    books.setToLocalStorage();
+})
+
 

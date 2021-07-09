@@ -13,6 +13,10 @@ button {
     cursor: pointer;
 }
 
+.show {
+    display: flex !important;
+}
+
 .main {
     display: flex;
     flex-direction: column;
@@ -71,4 +75,35 @@ button {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.form-book{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.form-book input{
+    margin-bottom: 5px;
+}
+
+.form-book button {
+    width: 50px;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    border: 1px solid grey;
+}
+
+th, td {
+    border: 1px solid grey;
+}
+
+table {
+    border: 2px solid grey;
 }
