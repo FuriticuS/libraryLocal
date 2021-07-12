@@ -5,53 +5,31 @@ menu.addEventListener('click', ({target}) => {
 
     switch (targetAttr) {
         case 'books':
-            bookHidden(targetAttr);
+            switchTabs(targetAttr);
             return;
         case 'visitors':
-            bookHidden(targetAttr);
+            switchTabs(targetAttr);
             return;
         case 'cards':
-            bookHidden(targetAttr);
+            switchTabs(targetAttr);
             return;
         case 'statistics':
-            bookHidden(targetAttr);
+            switchTabs(targetAttr);
             return;
     }
 });
 
-let books = document.getElementById('books');
-let visitors = document.getElementById('visitors');
-let cards = document.getElementById('cards');
-let statistics = document.getElementById('statistics');
+let tabs = document.querySelectorAll('.tab');
 
-function bookHidden(targetAttr){
-    if(targetAttr==='books'){
-        books.hidden = false;
-        visitors.hidden=true;
-        cards.hidden=true;
-        statistics.hidden=true;
-    }
-
-    if(targetAttr==='visitors'){
-        books.hidden = true;
-        visitors.hidden=false;
-        cards.hidden=true;
-        statistics.hidden=true;
-    }
-
-    if(targetAttr==='cards'){
-        books.hidden = true;
-        visitors.hidden=true;
-        cards.hidden=false;
-        statistics.hidden=true;
-    }
-
-    if(targetAttr==='statistics'){
-        books.hidden = true;
-        visitors.hidden=true;
-        cards.hidden=true;
-        statistics.hidden=false;
-    }
+function switchTabs(targetAttr){
+    tabs.forEach(el => {
+        if(targetAttr === el.dataset.tab){
+            el.hidden = false;
+        }
+        else {
+            el.hidden = true;
+        }
+    })
 
 }
 
