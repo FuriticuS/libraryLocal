@@ -1,84 +1,105 @@
 class Books {
     static CONTAINER = document.getElementById('table-books').tBodies[0];
+    static SHOW_FORM = document.getElementById('add-btn-books');
+
     constructor() {
         this.books = []
-        this.form = new formBooks();
+        this.form = new FormBooks();
 
         this.init();
-        this.addBooks();
-        this.setToLocalStorage();
-
-        this.createBook();
     }
 
-    init(){
+    init() {
         this.books = JSON.parse(localStorage.getItem('books')) || [];
-    }
 
-    addBooks(){
-        const bookBtn = document.getElementById('add-btn-books');
-        const bookForm = document.querySelector('.form-book');
+        this.showFormBook();
 
-        bookBtn.addEventListener('click', () => {
-            if(!bookForm.classList.contains('show')){
-                bookForm.classList.add('show');
-            }
-            else {
-                bookForm.classList.remove('show');
-            }
-
+        this.form.bookForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.onSubmitFormBook();
         });
     }
 
-    createBook(){
-        const bookForm = document.querySelector('.form-book');
-        const apply = document.getElementById('apply-book');
-
-        apply.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            const dataBook = this.form.getFormValues();
-            console.log(this.form.getFormValues());
-            this.books.push(dataBook);
-
-            bookForm.classList.remove('show');
-
-            Books.CONTAINER.innerHTML = Books.createElement(dataBook);
-        })
+    showFormBook() {
+        Books.SHOW_FORM.addEventListener('click', () => {
+            if (Books.SHOW_FORM.innerText === 'Close') {
+                Books.SHOW_FORM.innerText = 'Add Book';
+                this.form.bookForm.classList.remove('show');
+            } else {
+                Books.SHOW_FORM.innerText = 'Close';
+                this.form.bookForm.classList.add('show');
+            }
+        });
     }
 
-    static createElement({name}){
-        return `<tr>${name}</tr>>`
+    onSubmitFormBook(e) {
+        const dataFormBook = this.form.getDataForm();
+
+        this.books.push(dataFormBook);
+
+        this.form.bookForm.classList.remove('show');
+        Books.SHOW_FORM.innerText = 'Add Book';
+
+        Books.CONTAINER.insertAdjacentHTML('afterbegin', Books.createElement(dataFormBook));
     }
 
-    setToLocalStorage(){
+    static createElement({id, name, author, year, who, pages, amount}) {
+        return `<tr>
+                    <td>${id}</td>
+                    <td>${name}</td>
+                    <td>${author}</td>
+                    <td>${year}</td>
+                    <td>${who}</td>
+                    <td>${pages}</td>
+                    <td>${amount}</td>
+                </tr>`
+    }
+
+    setToLocalStorage() {
         localStorage.setItem('books', JSON.stringify(this.books))
     }
 }
 
-class formBooks {
-    getFormValues(){
-        const formElements = [...document.querySelector('.form-book')];
-        let objInputs = {};
-        let newMss = [];
+class FormBooks {
+    constructor() {
+        this.bookForm = document.forms['form-book'];
+    }
 
-        console.log(newMss);
-        formElements.forEach((item, i) => {
-            if(item !== ''){
-                newMss.push(item.value);
-                objInputs[i] = item[i];
-            }
-            else {
-                console.log('no rules');
-            }
-
-        });
-
-        Object.assign(objInputs,newMss);
-
+    getDataForm() {
         return {
-            objInputs
+            id: Math.floor(Math.random() * 100),
+            name: this.getNameValue,
+            author: this.getAuthorValue,
+            year: this.getYearValue,
+            who: this.getWhoValue,
+            pages: this.getPagesValue,
+            amount: this.getAmountValue
         }
     }
+
+    get getNameValue() {
+        return this.bookForm.elements['name'].value;
+    }
+
+    get getAuthorValue() {
+        return this.bookForm.elements['author'].value;
+    }
+
+    get getYearValue() {
+        return this.bookForm.elements['year'].value;
+    }
+
+    get getWhoValue() {
+        return this.bookForm.elements['who'].value;
+    }
+
+    get getPagesValue() {
+        return this.bookForm.elements['pages'].value;
+    }
+
+    get getAmountValue() {
+        return this.bookForm.elements['amount'].value;
+    }
+
 }
 
