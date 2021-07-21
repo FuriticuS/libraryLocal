@@ -37,14 +37,7 @@ let books;
 
 window.addEventListener('DOMContentLoaded', () => {
     books = new Books();
-    showBook(books);
 });
-
-let tbodyBooks = document.getElementById('table-books').tBodies[0];
-function showBook(books){
-    let book = JSON.parse(localStorage.getItem('books')) || [];
-    console.log(book);
-}
 
 window.addEventListener('unload', () => {
     books?.setToLocalStorage();
