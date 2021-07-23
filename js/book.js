@@ -1,12 +1,12 @@
 class Books {
     static CONTAINER = document.getElementById('table-books').tBodies[0];
-    static SHOW_FORM = document.getElementById('add-btn-books');
-    static SORT_BOOKS = document.getElementById('sort-btn-books');
+    static SHOW_FORM_BTN = document.getElementById('add-btn-books');
+    static SORT_BOOKS_SELECT = document.getElementById('sort-books');
+    static SORT_BOOKS_BTN = document.getElementById('sort-books-btn');
 
     constructor() {
         this.books = []
         this.form = new FormBooks();
-        this.sort = new SortBooks();
 
         this.init();
     }
@@ -18,101 +18,42 @@ class Books {
 
         this.showFormBook();
 
-        this.sortBooksTable();
-
         this.form.bookForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            this.onSubmitFormBook();
+            this.addNewBook();
+        });
+
+        Books.SORT_BOOKS_BTN.addEventListener('click', ()=> {
+            const sortValue = Books.SORT_BOOKS_SELECT.value;
+            this.sortBooksTable(sortValue);
         });
     }
 
     showFormBook() {
-        Books.SHOW_FORM.addEventListener('click', () => {
-            if (Books.SHOW_FORM.innerText === 'Close') {
-                Books.SHOW_FORM.innerText = 'Add Book';
+        Books.SHOW_FORM_BTN.addEventListener('click', () => {
+            if (Books.SHOW_FORM_BTN.innerText === 'Close') {
+                Books.SHOW_FORM_BTN.innerText = 'Add Book';
                 this.form.bookForm.classList.remove('show');
             } else {
-                Books.SHOW_FORM.innerText = 'Close';
+                Books.SHOW_FORM_BTN.innerText = 'Close';
                 this.form.bookForm.classList.add('show');
             }
         });
     }
 
-    sortBooksTable(){
-        Books.SORT_BOOKS.addEventListener('click', () =>{
-            console.log('sort');
-        })
-    }
-
-    onSubmitFormBook(e) {
+    addNewBook() {
         const dataFormBook = this.form.getDataForm();
 
         this.books.push(dataFormBook);
 
         this.form.bookForm.classList.remove('show');
-        Books.SHOW_FORM.innerText = 'Add Book';
+        Books.SHOW_FORM_BTN.innerText = 'Add Book';
 
         Books.CONTAINER.insertAdjacentHTML('afterbegin', Books.createElement(dataFormBook));
     }
 
-    renderBooks(books = []){
-        // не сработало
-        // console.log(books);
-        // Books.CONTAINER.insertAdjacentHTML('afterbegin', Books.createElement(books));
-
-        Books.CONTAINER.append(this.createBooksFragmet(books));
-    }
-
     createBooksFragmet(books){
-        const fragment = document.createDocumentFragment();
-
-        books.forEach( books => {
-            fragment.append(this.createBookElement(books));
-        });
-
-        return fragment;
-    }
-
-    createBookElement({id, name, author, year, who, pages, amount}){
-
-        let tr = document.createElement('tr');
-
-        let td1 = document.createElement('td');
-        td1.innerHTML = id;
-        tr.appendChild(td1);
-
-        let td2 = document.createElement('td');
-        td2.innerHTML = name;
-        tr.appendChild(td2);
-
-        let td3 = document.createElement('td');
-        td3.innerHTML = author;
-        tr.appendChild(td3);
-
-        let td4 = document.createElement('td');
-        td4.innerHTML = year;
-        tr.appendChild(td4);
-
-        let td5 = document.createElement('td');
-        td5.innerHTML = who;
-        tr.appendChild(td5);
-
-        let td6 = document.createElement('td');
-        td6.innerHTML = pages;
-        tr.appendChild(td6);
-
-        let td7 = document.createElement('td');
-        td7.innerHTML = amount;
-        tr.appendChild(td7);
-
-        let td8 = document.createElement('td');
-        const editBtn = document.createElement('button');
-        editBtn.textContent = 'Edit';
-        editBtn.dataset.btn = 'edit';
-        td8.append(editBtn);
-        tr.appendChild(td8);
-
-        return tr;
+        return books.reduce( (acc,books) => acc + Books.createElement(books) , '');
     }
 
     static createElement({id, name, author, year, who, pages, amount}) {
@@ -124,7 +65,30 @@ class Books {
                     <td>${who}</td>
                     <td>${pages}</td>
                     <td>${amount}</td>
+                    <td><button class="edit-book">Edit</button></td>
                 </tr>`
+    }
+
+    renderBooks(books = []){
+        Books.CONTAINER.innerHTML = this.createBooksFragmet(books);
+    }
+
+    sortBooksTable(sortValue){
+        console.log(sortValue, typeof sortValue);
+        let sortedRows = Array.from(Books.CONTAINER.rows)
+            .sort((rowA, rowB) => {
+
+                if(sortValue === '0' || sortValue === '3' || sortValue === '5' || sortValue === '6'){
+                    return +rowA.cells[sortValue].textContent - +rowB.cells[sortValue].textContent
+                }
+                else {
+                    return rowA.cells[sortValue].textContent > rowB.cells[sortValue].textContent
+                        ? 1 : -1
+                }
+
+            });
+
+        Books.CONTAINER.append(...sortedRows);
     }
 
     setToLocalStorage() {
@@ -174,26 +138,3 @@ class FormBooks {
     }
 
 }
-
-class SortBooks{
-    constructor() {
-        this.table = document.getElementById('table-books');
-        this.name = '';
-
-        this.getNameSort();
-    }
-
-    getNameSort(){
-        // this.name = select.value ??
-        this.sortBooksTable();
-    }
-
-    sortBooksTable(){
-        let sortedRows = Array.from(this.table.rows)
-            .slice(1)
-            .sort((rowA, rowB) => rowA.cells[this.name].textContent > rowB.cells[this.name].textContent ? 1 : -1);
-
-        this.table.tBodies[0].append(...sortedRows);
-    }
-}
-
