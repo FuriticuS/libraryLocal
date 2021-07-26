@@ -3,6 +3,7 @@ class Books {
     static SHOW_FORM_BTN = document.getElementById('add-btn-books');
     static SORT_BOOKS_SELECT = document.getElementById('sort-books');
     static SORT_BOOKS_BTN = document.getElementById('sort-books-btn');
+    static SEARCH_BOOKS_INPUT = document.getElementById('search-books');
 
     constructor() {
         this.books = []
@@ -24,9 +25,12 @@ class Books {
         });
 
         Books.SORT_BOOKS_BTN.addEventListener('click', ()=> {
-            const sortValue = Books.SORT_BOOKS_SELECT.value;
-            this.sortBooksTable(sortValue);
+            this.renderSortBooksTable(Books.SORT_BOOKS_SELECT.value);
         });
+
+        Books.SEARCH_BOOKS_INPUT.addEventListener('input', ()=> {
+            this.renderSearchBooks(Books.SEARCH_BOOKS_INPUT.value);
+        })
     }
 
     showFormBook() {
@@ -43,6 +47,15 @@ class Books {
 
     addNewBook() {
         const dataFormBook = this.form.getDataForm();
+        // form validation
+        if(!Object.values(dataFormBook).every(el => el)) {
+            Array.from(this.form.bookForm).forEach( el =>{
+                if(el.value === '' && el.tagName === 'INPUT'){
+                    el.style.border = '1px solid red';
+                }
+            })
+            return
+        }
 
         this.books.push(dataFormBook);
 
@@ -73,7 +86,7 @@ class Books {
         Books.CONTAINER.innerHTML = this.createBooksFragmet(books);
     }
 
-    sortBooksTable(sortValue){
+    renderSortBooksTable(sortValue){
         console.log(sortValue, typeof sortValue);
         let sortedRows = Array.from(Books.CONTAINER.rows)
             .sort((rowA, rowB) => {
@@ -89,6 +102,17 @@ class Books {
             });
 
         Books.CONTAINER.append(...sortedRows);
+    }
+
+    renderSearchBooks(searchValue){
+        let searchRows = this.books
+            .filter(book => {
+                return book.name.includes(searchValue)
+                || book.author.includes(searchValue)
+                || book.amount.includes(searchValue)
+            });
+
+        this.renderBooks(searchRows);
     }
 
     setToLocalStorage() {

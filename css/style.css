@@ -109,3 +109,7 @@ th, td {
 table {
     border: 2px solid grey;
 }
+
+.red{
+    border: 1px solid red;
+}
