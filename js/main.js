@@ -34,13 +34,16 @@ function switchTabs(targetAttr){
 }
 
 let books;
+let visitors;
 
 window.addEventListener('DOMContentLoaded', () => {
     books = new Books();
+    visitors = new Visitors();
 });
 
 window.addEventListener('unload', () => {
     books?.setToLocalStorage();
+    visitors?.setToLocalStorage();
 })
 
 

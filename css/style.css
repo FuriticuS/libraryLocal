@@ -77,7 +77,8 @@ button {
     justify-content: space-between;
 }
 
-.form-book{
+.form-book,
+.form-visitor{
     display: none;
     flex-direction: column;
     align-items: center;
@@ -85,11 +86,13 @@ button {
     margin-top: 20px;
 }
 
-.form-book input{
+.form-book input,
+.form-visitor input{
     margin-bottom: 5px;
 }
 
-.form-book button {
+.form-book button,
+.form-visitor button{
     width: 50px;
 }
 

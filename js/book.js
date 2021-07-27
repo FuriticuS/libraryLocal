@@ -78,7 +78,7 @@ class Books {
                     <td>${who}</td>
                     <td>${pages}</td>
                     <td>${amount}</td>
-                    <td><button class="edit-book">Edit</button></td>
+                    <td><button data-btn="edit-book">Edit</button></td>
                 </tr>`
     }
 

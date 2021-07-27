@@ -23,7 +23,7 @@
         <li data-btn="statistics">Statistics</li>
     </ul>
 
-    <div id="books" data-tab='books' class="tab">
+    <div id="books" data-tab='books' class="tab" hidden>
 
         <div class="books-head">
             <h2>All Books</h2>
@@ -86,11 +86,11 @@
 
     </div>
 
-    <div id="visitors" data-tab='visitors' class="tab" hidden>
+    <div id="visitors" data-tab='visitors' class="tab">
 
         <div class="visitors-head">
             <h2>All Visitors</h2>
-            <button id="add-btn-visitors">Add visitor</button>
+            <button id="add-btn-visitors">New visitor</button>
         </div>
 
         <div class="main">
@@ -108,14 +108,32 @@
             <div>
                 <label for="search-visitors">Search:</label>
                 <input type="text" id="search-visitors">
-
-                <button id="search-visitors-btn">Search</button>
             </div>
 
         </div>
 
+        <form class="form-visitor" name="form-visitor">
+            <input type="text" name="name" placeholder="name">
+            <input type="tel" name="phone" placeholder="phone">
+
+            <button id="add-visitor">Add visitor</button>
+        </form>
+
         <div>
-            <table></table>
+            <table id="table-visitors">
+                <thead>
+                <tr>
+                    <th data-sort="id">ID</th>
+                    <th data-sort="name">Name</th>
+                    <th data-sort="phone">Phone number</th>
+                    <th data-sort="edit">Edit</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                </tbody>
+            </table>
         </div>
 
     </div>
