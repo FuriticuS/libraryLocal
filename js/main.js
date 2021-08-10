@@ -35,15 +35,18 @@ function switchTabs(targetAttr){
 
 let books;
 let visitors;
+let cards;
 
 window.addEventListener('DOMContentLoaded', () => {
     books = new Books();
     visitors = new Visitors();
+    cards = new Cards();
 });
 
 window.addEventListener('unload', () => {
     books?.setToLocalStorage();
     visitors?.setToLocalStorage();
+    cards?.setToLocalStorage();
 })
 
 

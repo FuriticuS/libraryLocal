@@ -86,7 +86,7 @@
 
     </div>
 
-    <div id="visitors" data-tab='visitors' class="tab">
+    <div id="visitors" data-tab='visitors' class="tab" hidden>
 
         <div class="visitors-head">
             <h2>All Visitors</h2>
@@ -139,12 +139,11 @@
 
     </div>
 
-    <div id="cards" data-tab='cards' class="tab" hidden>
+    <div id="cards" data-tab='cards' class="tab">
 
         <div class="cards-head">
             <h2>All Сards</h2>
-            <button id="give-out-btn">Give out book</button>
-            <button id="take-btn">Take book</button>
+            <button id="newcard-btn">New card</button>
         </div>
 
         <div class="main">
@@ -154,6 +153,8 @@
                 <select id="sort-cards">
                     <option>Id</option>
                     <option>Name</option>
+                    <option>Borrow day</option>
+                    <option>Return day</option>
                 </select>
 
                 <button id="sort-btn-cards">Sort</button>
@@ -167,8 +168,34 @@
 
         </div>
 
+        <form class="form-cards" name="form-cards">
+
+            <select id="visitor-cards">
+            </select>
+
+            <select id="books-cards">
+            </select>
+
+            <button id="save-card">Save</button>
+
+        </form>
+
         <div>
-            <table></table>
+            <table id="table-cards">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Book</th>
+                    <th>Borrow day</th>
+                    <th>Return day</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                </tbody>
+            </table>
         </div>
 
     </div>

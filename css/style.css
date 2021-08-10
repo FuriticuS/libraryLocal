@@ -78,7 +78,8 @@ button {
 }
 
 .form-book,
-.form-visitor{
+.form-visitor,
+.form-cards{
     display: none;
     flex-direction: column;
     align-items: center;
@@ -92,7 +93,8 @@ button {
 }
 
 .form-book button,
-.form-visitor button{
+.form-visitor button,
+.form-cards button{
     width: 50px;
 }
 

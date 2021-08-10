@@ -1,6 +1,7 @@
 class Visitors {
     static VISITOR_CONTAINER = document.getElementById('table-visitors').tBodies[0];
     static SHOW_VISITORS_FORM_BTN = document.getElementById('add-btn-visitors');
+    static ADD_VISITORS_FORM_BTN = document.getElementById('add-visitor');
     static SORT_VISITORS_SELECT = document.getElementById('sort-visitors');
     static SORT_VISITORS_BTN = document.getElementById('sort-btn-visitors');
     static SEARCH_VISITORS_INPUT = document.getElementById('search-visitors');
@@ -9,6 +10,10 @@ class Visitors {
         this.visitors = [];
         this.form = new FormVisitors();
 
+        this.isEdit = false;
+        this.editRow = null;
+        this.editVisitorID = null;
+
         this.init();
     }
 
@@ -16,9 +21,17 @@ class Visitors {
         this.visitors = JSON.parse(localStorage.getItem('visitors')) || [];
 
         this.showFormVisitors();
+
         this.form.visitorsForm.addEventListener('submit', (e) => {
             e.preventDefault();
+
+            if(this.isEdit){
+               this.renderEditVisitor();
+               return;
+            }
+
             this.addNewVisitor();
+
         });
 
         Visitors.SORT_VISITORS_BTN.addEventListener('click', () =>{
@@ -28,6 +41,15 @@ class Visitors {
         Visitors.SEARCH_VISITORS_INPUT.addEventListener('input', () =>{
            this.renderSearchVisitors(Visitors.SEARCH_VISITORS_INPUT.value);
         });
+
+        Visitors.VISITOR_CONTAINER.addEventListener('click', ({target}) =>{
+            if(target.dataset.btn === 'edit-visitor'){
+                const visitorRow = target.closest('[data-id]');
+
+                this.editRow = visitorRow;
+                this.editVisitor(this.editRow.dataset.id);
+            }
+        })
 
         this.renderVisitor(this.visitors);
     }
@@ -74,11 +96,11 @@ class Visitors {
     }
 
     static createElementVisitors({id, name, phone}) {
-        return `<tr>
+        return `<tr data-id=${id}>
                     <td>${id}</td>
                     <td>${name}</td>
                     <td>${phone}</td>
-                    <td><button>Edit</button></td>
+                    <td><button data-btn="edit-visitor">Edit</button></td>
                 </tr>`
     }
 
@@ -107,6 +129,40 @@ class Visitors {
         this.renderVisitor(renderSearchVisitors);
     }
 
+    editVisitor(editVisitorID){
+        this.isEdit = true;
+        this.editVisitorID = editVisitorID;
+
+        Visitors.SHOW_VISITORS_FORM_BTN.innerText = 'Close';
+        Visitors.ADD_VISITORS_FORM_BTN.innerText = 'Edit Visitor';
+        this.form.visitorsForm.classList.add('show');
+
+        const visitor = this.visitors.find(el => +el.id === +editVisitorID);
+        this.form.setDataForm(visitor);
+    };
+
+    renderEditVisitor(){
+        const dataVisitor = this.form.getDataForm();
+
+        delete dataVisitor.id;
+        this.visitors = this.visitors.map( el =>{
+            return +el.id === +this.editVisitorID ? {...el, ...dataVisitor} : el;
+        })
+
+        const row = Visitors.createElementVisitors({
+            id: this.editVisitorID,
+            ...dataVisitor
+        })
+
+        this.editRow.remove();
+        Visitors.VISITOR_CONTAINER.insertAdjacentHTML('afterbegin', row);
+
+        this.isEdit = false;
+        this.editRow = null;
+        this.editVisitorID = null;
+
+    };
+
     setToLocalStorage() {
         localStorage.setItem('visitors', JSON.stringify(this.visitors));
     }
@@ -123,6 +179,11 @@ class FormVisitors {
             name: this.getNameVisitor,
             phone: this.getPhoneNumber
         }
+    }
+
+    setDataForm({name, phone}) {
+        this.visitorsForm.elements['name'].value = name;
+        this.visitorsForm.elements['phone'].value = phone;
     }
 
     get getNameVisitor() {
