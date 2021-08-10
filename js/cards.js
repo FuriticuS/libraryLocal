@@ -83,15 +83,22 @@ class FormCards{
     }
 
     get getNameVisitor(){
-
+        return FormCards.SELECT_VISITOR_CARD.value;
     }
 
     get getNameBook(){
-
+        return FormCards.SELECT_BOOK_CARD.value;
     }
 
     get getBorrowDay(){
+        let today = new Date();
+        let day = String(today.getDate()).padStart(2, '0');
+        let month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let year = today.getFullYear();
 
+        today = day + '.' + month + '.' + year;
+
+        return today;
     }
 
     get getReturnDay(){
