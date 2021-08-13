@@ -2,9 +2,9 @@ class Cards{
     static CONTAINER_CARDS = document.getElementById('table-cards').tBodies[0];
     static ADD_NEWCARD_BTN = document.getElementById('newcard-btn');
 
-    constructor() {
+    constructor(books, visitors) {
         this.cards = [];
-        this.formCards = new FormCards();
+        this.formCards = new FormCards(books, visitors);
 
         this.init();
     }
@@ -60,7 +60,7 @@ class Cards{
 
     static createElementCard({id, nameVisitor, nameBook, borrowDay, returnDay}){
         return `<tr>
-                    <td>${id}</td>
+                    <td data-id=${id}>${id}</td>
                     <td>${nameVisitor}</td>
                     <td>${nameBook}</td>
                     <td>${borrowDay}</td>
@@ -68,28 +68,40 @@ class Cards{
                 </tr>`
     }
 
+    setToLocalStorage(){
+        localStorage.setItem('cards', JSON.stringify(this.cards));
+    }
+
 }
 
 class FormCards{
-
+    static CONTAINER_CARDS = document.getElementById('table-cards').tBodies[0];
     static SELECT_VISITOR_CARD = document.getElementById('visitor-cards');
     static SELECT_BOOK_CARD = document.getElementById('books-cards');
 
-    constructor() {
+    constructor(books, visitors) {
         this.cardsForm = document.forms['form-cards'];
 
-        this.visitors = [];
-        this.books = [];
+        this.visitors = visitors;
+        this.books = books;
+
+        this.isReturn = false;
+        this.returnRow = null;
 
         this.init();
     }
 
     init(){
-        this.visitors = JSON.parse(localStorage.getItem('visitors')) || [];
-        this.books = JSON.parse(localStorage.getItem('books')) || [];
-
         this.addOptionNameVisitor(this.visitors);
         this.addOptionNameBooks(this.books);
+
+        FormCards.CONTAINER_CARDS.addEventListener('click', ({target}) => {
+            if(target.dataset.btn === 'return-card'){
+                const visitorRow = target.closest('[data-id]');
+                this.returnRow = visitorRow;
+                this.returnBook();
+            }
+        })
     }
 
     getDataForm(){
@@ -103,24 +115,28 @@ class FormCards{
     }
 
     addOptionNameVisitor(visitors){
-        let optionsVisitor = visitors.map(el => {
-            return el.name
+
+        const fragmentVisitors = document.createDocumentFragment();
+
+        visitors.forEach(el => {
+            let option = document.createElement('option');
+            option.innerText = el.name;
+            fragmentVisitors.append(option)
         });
 
-        console.log(optionsVisitor);
-
-        let option = document.createElement('option', optionsVisitor);
-
-        return FormCards.SELECT_VISITOR_CARD.insertAdjacentHTML('afterbegin', option);
-
+        FormCards.SELECT_VISITOR_CARD.append(fragmentVisitors);
     }
 
     addOptionNameBooks(books){
-        let optionsBooks = books.map(el => {
-            return `<option>${el.name}</option>`
-        });
+        const fragmentBooks = document.createDocumentFragment();
 
-        return FormCards.SELECT_VISITOR_CARD.innerText = optionsBooks;
+        books.forEach(el => {
+            let option = document.createElement('option');
+            option.innerText = el.name;
+            fragmentBooks.append(option);
+        })
+
+        FormCards.SELECT_BOOK_CARD.append(fragmentBooks);
     }
 
     get getNameVisitor(){
@@ -132,6 +148,19 @@ class FormCards{
     }
 
     get getBorrowDay(){
+        return this.getDate();
+    }
+
+    get getReturnDay(){
+        if(!this.isReturn){
+            return `<button data-btn="return-card">Return</button>`
+        }
+        else {
+            return this.getDate();
+        }
+    }
+
+    getDate(){
         let today = new Date();
         let day = String(today.getDate()).padStart(2, '0');
         let month = String(today.getMonth() + 1).padStart(2, '0');
@@ -142,8 +171,8 @@ class FormCards{
         return today;
     }
 
-    get getReturnDay(){
-
+    returnBook(){
+        console.log('return book');
     }
 
 }

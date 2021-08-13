@@ -40,7 +40,7 @@ let cards;
 window.addEventListener('DOMContentLoaded', () => {
     books = new Books();
     visitors = new Visitors();
-    cards = new Cards();
+    cards = new Cards(books.books, visitors.visitors);
 });
 
 window.addEventListener('unload', () => {
