@@ -36,11 +36,13 @@ function switchTabs(targetAttr){
 let books;
 let visitors;
 let cards;
+let statistic;
 
 window.addEventListener('DOMContentLoaded', () => {
     books = new Books();
     visitors = new Visitors();
-    cards = new Cards(books.books, visitors.visitors);
+    cards = new Cards(books, visitors.visitors);
+    statistic = new Statistic(books, visitors);
 });
 
 window.addEventListener('unload', () => {

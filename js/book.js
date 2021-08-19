@@ -26,7 +26,7 @@ class Books {
         this.form.bookForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            if(this.isEdit){
+            if (this.isEdit) {
                 this.renderEditBook();
                 return;
             }
@@ -34,21 +34,21 @@ class Books {
             this.addNewBook();
         });
 
-        Books.SORT_BOOKS_BTN.addEventListener('click', ()=> {
+        Books.SORT_BOOKS_BTN.addEventListener('click', () => {
             this.renderSortBooksTable(Books.SORT_BOOKS_SELECT.value);
         });
 
-        Books.SEARCH_BOOKS_INPUT.addEventListener('input', ()=> {
+        Books.SEARCH_BOOKS_INPUT.addEventListener('input', () => {
             this.renderSearchBooks(Books.SEARCH_BOOKS_INPUT.value);
-        })
+        });
 
-        Books.CONTAINER.addEventListener('click', ({target}) =>{
-            if(target.dataset.btn === 'edit-book'){
+        Books.CONTAINER.addEventListener('click', ({target}) => {
+            if (target.dataset.btn === 'edit-book') {
                 const bookRow = target.closest('[data-id]');
                 this.editRow = bookRow;
                 this.editBook(this.editRow.dataset.id);
             }
-        })
+        });
     }
 
     showFormBook() {
@@ -66,9 +66,9 @@ class Books {
     addNewBook() {
         const dataFormBook = this.form.getDataForm();
         // form validation
-        if(!Object.values(dataFormBook).every(el => el)) {
-            Array.from(this.form.bookForm).forEach( el =>{
-                if(el.value === '' && el.tagName === 'INPUT'){
+        if (!Object.values(dataFormBook).every(el => el)) {
+            Array.from(this.form.bookForm).forEach(el => {
+                if (el.value === '' && el.tagName === 'INPUT') {
                     el.style.border = '1px solid red';
                 }
             })
@@ -83,8 +83,8 @@ class Books {
         Books.CONTAINER.insertAdjacentHTML('afterbegin', Books.createElement(dataFormBook));
     }
 
-    createBooksFragmet(books){
-        return books.reduce( (acc,books) => acc + Books.createElement(books) , '');
+    createBooksFragmet(books) {
+        return books.reduce((acc, books) => acc + Books.createElement(books), '');
     }
 
     static createElement({id, name, author, year, who, pages, amount}) {
@@ -100,19 +100,18 @@ class Books {
                 </tr>`
     }
 
-    renderBooks(books = []){
+    renderBooks(books = []) {
         Books.CONTAINER.innerHTML = this.createBooksFragmet(books);
     }
 
-    renderSortBooksTable(sortValue){
+    renderSortBooksTable(sortValue) {
 
         let sortedRows = Array.from(Books.CONTAINER.rows)
             .sort((rowA, rowB) => {
 
-                if(sortValue === '0' || sortValue === '3' || sortValue === '5' || sortValue === '6'){
+                if (sortValue === '0' || sortValue === '3' || sortValue === '5' || sortValue === '6') {
                     return +rowA.cells[sortValue].textContent - +rowB.cells[sortValue].textContent
-                }
-                else {
+                } else {
                     return rowA.cells[sortValue].textContent > rowB.cells[sortValue].textContent
                         ? 1 : -1
                 }
@@ -122,18 +121,19 @@ class Books {
         Books.CONTAINER.append(...sortedRows);
     }
 
-    renderSearchBooks(searchValue){
+    renderSearchBooks(searchValue) {
         let searchRows = this.books
             .filter(book => {
                 return book.name.includes(searchValue)
-                || book.author.includes(searchValue)
-                || book.amount.includes(searchValue)
+                    || book.id === +searchValue
+                    || book.author.includes(searchValue)
+                    || book.amount.includes(searchValue)
             });
 
         this.renderBooks(searchRows);
     }
 
-    editBook(bookID){
+    editBook(bookID) {
         this.isEdit = true;
         this.editBookId = bookID;
 
@@ -144,11 +144,11 @@ class Books {
         this.form.bookForm.classList.add('show');
     }
 
-    renderEditBook(){
+    renderEditBook() {
         const dataBooks = this.form.getDataForm();
 
         delete dataBooks.id;
-        this.books = this.books.map( el => {
+        this.books = this.books.map(el => {
             return +el.id === +this.editBookId ? {...el, ...dataBooks} : el;
         });
 
@@ -163,6 +163,19 @@ class Books {
         this.isEdit = false;
         this.editBookId = null;
         this.editRow = null;
+    }
+
+    changeBookAmount(id, action) {
+        this.books.map(book => {
+            return id === book.id ?
+                {
+                    ...book,
+                    amount: action === 'increment' ? book.amount++ : book.amount--
+                }
+                : book
+        });
+
+        this.renderBooks(this.books);
     }
 
     setToLocalStorage() {
@@ -187,7 +200,7 @@ class FormBooks {
         }
     }
 
-    setDataForm({name, author,year,who,pages, amount}){
+    setDataForm({name, author, year, who, pages, amount}) {
         this.bookForm.elements['name'].value = name;
         this.bookForm.elements['author'].value = author;
         this.bookForm.elements['year'].value = year;

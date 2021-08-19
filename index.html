@@ -151,10 +151,11 @@
             <div>
                 <label for="sort-cards">Sort by:</label>
                 <select id="sort-cards">
-                    <option>Id</option>
-                    <option>Name</option>
-                    <option>Borrow day</option>
-                    <option>Return day</option>
+                    <option value="0">Id</option>
+                    <option value="1">Name</option>
+                    <option value="2">Book</option>
+                    <option value="3">Borrow day</option>
+                    <option value="4">Return day</option>
                 </select>
 
                 <button id="sort-btn-cards">Sort</button>
@@ -163,7 +164,6 @@
             <div>
                 <label for="search-cards">Search:</label>
                 <input type="text" id="search-cards">
-                <button id="search-cards-btn">Search</button>
             </div>
 
         </div>
@@ -184,11 +184,11 @@
             <table id="table-cards">
                 <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Book</th>
-                    <th>Borrow day</th>
-                    <th>Return day</th>
+                    <th data-sort="id">ID</th>
+                    <th data-sort="name">Name</th>
+                    <th data-sort="book">Book</th>
+                    <th data-sort="borrowDay">Borrow day</th>
+                    <th data-sort="returnDay">Return day</th>
                 </tr>
                 </thead>
 
@@ -213,8 +213,10 @@
             <div>
                 <label for="sort-statistics">Sort by:</label>
                 <select id="sort-statistics">
-                    <option>Id</option>
                     <option>Name</option>
+                    <option>Author</option>
+                    <option>Who</option>
+                    <option>Count</option>
                 </select>
 
                 <button id="sort-btn-statistics">Sort</button>
@@ -223,22 +225,35 @@
             <div>
                 <label for="search-statistics">Search:</label>
                 <input type="text" id="search-statistics">
-                <button id="search-statistics-btn">Search</button>
             </div>
 
         </div>
 
         <div>
-            <table></table>
+            <table id="static-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Author</th>
+                    <th>Who</th>
+                    <th>Count</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                </tbody>
+            </table>
         </div>
 
     </div>
 
 </div>
 
+<script src="js/statistic.js"></script>
+<script src="js/cards.js"></script>
 <script src="js/book.js"></script>
 <script src="js/visitors.js"></script>
-<script src="js/cards.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
