@@ -166,8 +166,11 @@ class Books {
     }
 
     changeBookAmount(id, action) {
+
+        console.log(id, action);
+
         this.books.map(book => {
-            return id === book.id ?
+            return +id === +book.id ?
                 {
                     ...book,
                     amount: action === 'increment' ? book.amount++ : book.amount--

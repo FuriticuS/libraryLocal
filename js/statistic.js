@@ -1,53 +1,46 @@
-class Statistic{
+class StatisticBooks{
 
-    static POPULAR_BOOKS_BTN = document.getElementById('popular-btn');
-    static ACTIVE_USERS_BTN = document.getElementById('active-users-btn');
     static CONTAINER_STATIC = document.getElementById('static-table').tBodies[0];
 
-    constructor(books, visitors) {
-        this.books = books;
-        this.visitors = visitors;
-
-        this.static = [];
+    constructor(cards) {
+        this.cards = cards.cards;
 
         this.init();
     }
 
     init(){
-        Statistic.POPULAR_BOOKS_BTN.addEventListener('click', () => {
-            this.renderPopularBooks(this.books.books);
-        })
-
-        Statistic.ACTIVE_USERS_BTN.addEventListener('click', () => {
-            this.renderActiveUsers(this.visitors);
-        })
+        this.renderPopularBooks(this.cards);
     }
 
     renderPopularBooks(books){
-        const popularBooks = books.filter(el => el.id > 200)
-        console.log(popularBooks, 'popular books');
+        const popularBooks = books.sort((a,b,arr) => {
+            return a.nameBook > b.nameBook ? 1 : -1
+        });
 
-        this.renderStatic(popularBooks);
-    }
+        let popular = [];
+        for(let i =0; i < popularBooks.length; i++){
+            if(i === 10){
+                break;
+            }
+            popular.push(popularBooks[i]);
+        }
 
-    renderActiveUsers(visitors){
-        console.log(visitors, 'active users');
+        this.renderStatic(popular);
     }
 
     renderStatic(arrStat) {
-        Statistic.CONTAINER_STATIC.innerHTML = this.createStaticFragment(arrStat);
+        StatisticBooks.CONTAINER_STATIC.innerHTML = this.createStaticFragment(arrStat);
     }
 
     createStaticFragment(arrStat){
-        return arrStat.reduce( (acc, stat) => acc + Statistic.createELementStatic(stat), '')
+        return arrStat.reduce( (acc, stat) => acc + StatisticBooks.createELementStatic(stat), '')
     }
 
-    static createELementStatic({name, author, who}){
+    static createELementStatic({nameBook, nameVisitor, idBook}){
         return `<tr>
-                    <td>${name}</td>
-                    <td>${author}</td>
-                    <td>${who}</td>
-                    <td>count</td>
+                    <td>${idBook}</td>
+                    <td>${nameBook}</td>
+                    <td>${nameVisitor}</td>
                 </tr>`
     }
 

@@ -37,14 +37,14 @@ class Cards {
 
         Cards.ADD_NEWCARD_BTN.addEventListener('click', () => {
             this.formCards.addOptionNameBooks(this.books.books);
-            this.formCards.addOptionNameVisitor(this.visitors.visitors);
+            this.formCards.addOptionNameVisitor(this.visitors);
         });
 
         Cards.CONTAINER_CARDS.addEventListener('click', ({target}) => {
             if (target.dataset.btn === 'return-card') {
                 const visitorRow = target.closest('[data-id]');
                 this.returnRowBook = visitorRow;
-                this.returnBook(+this.returnRowBook.dataset.id);
+                this.returnBook(+this.returnRowBook.dataset.id, visitorRow);
             }
         });
 
@@ -60,7 +60,6 @@ class Cards {
 
     addNewCard() {
         const dataFormCard = this.formCards.getDataForm();
-        console.log(dataFormCard);
 
         this.cards.push(dataFormCard);
 
@@ -68,6 +67,8 @@ class Cards {
         Cards.ADD_NEWCARD_BTN.innerText = 'New card';
 
         Cards.CONTAINER_CARDS.insertAdjacentHTML('afterbegin', Cards.createElementCard(dataFormCard));
+        console.log('dataFormCard add card', dataFormCard);
+        this.books.changeBookAmount(dataFormCard.idBook, 'dec');
     }
 
     showCards() {
@@ -104,15 +105,21 @@ class Cards {
         localStorage.setItem('cards', JSON.stringify(this.cards));
     }
 
-    returnBook(returnBookID) {
+    returnBook(returnBookID, oldRow) {
+        const dataFormCard = this.formCards.getDataForm();
+
         this.formCards.isReturn = true;
         this.returnRowBook = returnBookID;
 
         const book = this.cards.find(el => +el.id === returnBookID);
         book.returnDay = this.formCards.getDate();
-        console.log(book);
-        // рендер таблицы?
-        this.renderCards(book);
+
+        oldRow.remove();
+        const row = Cards.createElementCard(book);
+        Cards.CONTAINER_CARDS.insertAdjacentHTML('afterbegin', row);
+        this.formCards.isReturn = false;
+
+        this.books.changeBookAmount(dataFormCard.idBook, 'increment');
     }
 
     renderSortCards(sortValue) {
@@ -185,6 +192,10 @@ class FormCards {
             fragmentVisitors.append(option)
         });
 
+        while(FormCards.SELECT_VISITOR_CARD.firstChild){
+            FormCards.SELECT_VISITOR_CARD.firstChild.remove();
+        }
+
         FormCards.SELECT_VISITOR_CARD.append(fragmentVisitors);
     }
 
@@ -192,15 +203,19 @@ class FormCards {
         const fragmentBooks = document.createDocumentFragment();
 
         books.forEach(el => {
-            if (el.amount === '0') {
-                return
+            if (el.amount <= 0) {
+                return false;
             } else {
                 let option = document.createElement('option');
-                option.value = el.id;
+                option.value = el.name;
                 option.innerText = el.name;
                 fragmentBooks.append(option);
             }
         })
+
+        while(FormCards.SELECT_BOOK_CARD.firstChild){
+            FormCards.SELECT_BOOK_CARD.firstChild.remove();
+        }
 
         FormCards.SELECT_BOOK_CARD.append(fragmentBooks);
     }
@@ -214,7 +229,8 @@ class FormCards {
     }
 
     get getIdBook() {
-        return FormCards.SELECT_BOOK_CARD.value;
+        console.log('create card', this.books);
+        return this.books.id;
     }
 
     get getBorrowDay() {

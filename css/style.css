@@ -6,6 +6,7 @@ h1 {
 }
 
 h2 {
+    font-size: 24px;
     font-family: Arial, sans-serif;
 }
 
@@ -122,4 +123,9 @@ table {
 .form-cards select {
     width: 200px;
     margin-bottom: 20px;
+}
+
+.sort-table-statistic h2 {
+    text-align: center;
+    margin-top: 20px;
 }

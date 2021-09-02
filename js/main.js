@@ -42,7 +42,7 @@ window.addEventListener('DOMContentLoaded', () => {
     books = new Books();
     visitors = new Visitors();
     cards = new Cards(books, visitors.visitors);
-    statistic = new Statistic(books, visitors);
+    statistic = new StatisticBooks(cards);
 });
 
 window.addEventListener('unload', () => {
