@@ -21,8 +21,6 @@ class Cards {
     }
 
     init() {
-        this.books.changeBookAmount(this.idBooks, this.action);
-
         this.cards = JSON.parse(localStorage.getItem('cards')) || [];
 
         this.showCards();
@@ -67,7 +65,6 @@ class Cards {
         Cards.ADD_NEWCARD_BTN.innerText = 'New card';
 
         Cards.CONTAINER_CARDS.insertAdjacentHTML('afterbegin', Cards.createElementCard(dataFormCard));
-        console.log('dataFormCard add card', dataFormCard);
         this.books.changeBookAmount(dataFormCard.idBook, 'dec');
     }
 
@@ -207,7 +204,7 @@ class FormCards {
                 return false;
             } else {
                 let option = document.createElement('option');
-                option.value = el.name;
+                option.value = el.id;
                 option.innerText = el.name;
                 fragmentBooks.append(option);
             }
@@ -225,12 +222,11 @@ class FormCards {
     }
 
     get getNameBook() {
-        return FormCards.SELECT_BOOK_CARD.value;
+        return this.books.find(({id}) => +FormCards.SELECT_BOOK_CARD.value === +id).name;
     }
 
     get getIdBook() {
-        console.log('create card', this.books);
-        return this.books.id;
+        return FormCards.SELECT_BOOK_CARD.value;
     }
 
     get getBorrowDay() {

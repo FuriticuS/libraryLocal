@@ -4,6 +4,7 @@ class Books {
     static SORT_BOOKS_SELECT = document.getElementById('sort-books');
     static SORT_BOOKS_BTN = document.getElementById('sort-books-btn');
     static SEARCH_BOOKS_INPUT = document.getElementById('search-books');
+    static URL_BOOKS = 'https://614252674d16670017ba2d08.mockapi.io/books';
 
     constructor() {
         this.books = []
@@ -13,13 +14,13 @@ class Books {
         this.editBookId = null;
         this.editRow = null;
 
+        this.deleteBookRow = null;
+
         this.init();
     }
 
     init() {
-        this.books = JSON.parse(localStorage.getItem('books')) || [];
-
-        this.renderBooks(this.books);
+        this.getBooks(this.renderBooks);
 
         this.showFormBook();
 
@@ -49,6 +50,68 @@ class Books {
                 this.editBook(this.editRow.dataset.id);
             }
         });
+
+        Books.CONTAINER.addEventListener('click', ({target}) => {
+            if(target.dataset.btn === 'delete-book'){
+                const bookRow = target.closest('[data-id]');
+                this.deleteBookRow = bookRow;
+                this.deleteBooks(this.deleteBookRow.dataset.id);
+            }
+        })
+    }
+
+    getBooks(render) {
+        try{
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('GET', Books.URL_BOOKS);
+
+            xhr.addEventListener('load', () => {
+                render(JSON.parse(xhr.responseText));
+            });
+
+            xhr.addEventListener('error', (e) => {
+                console.log('error load books', e);
+            });
+
+            xhr.send();
+
+        } catch (error) {
+            console.log('Get books',error);
+        }
+    }
+
+    deleteBooks(id){
+        try{
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('Delete', `${Books.URL_BOOKS}/${id}`);
+
+            xhr.addEventListener('load', ()=> {
+                JSON.parse(xhr.responseText).id
+            });
+
+            xhr.addEventListener('error', (e)=> {
+                console.log('delete problem', e);
+            });
+
+            xhr.send();
+
+        }catch (e) {
+            console.log('delete error', e);
+        }
+
+    }
+
+    editBook(bookID) {
+        this.isEdit = true;
+        this.editBookId = bookID;
+
+        const book = this.books.find(el => +el.id === +bookID);
+        this.form.setDataForm(book);
+
+        Books.SHOW_FORM_BTN.innerText = 'Close';
+        this.form.bookForm.classList.add('show');
     }
 
     showFormBook() {
@@ -83,7 +146,7 @@ class Books {
         Books.CONTAINER.insertAdjacentHTML('afterbegin', Books.createElement(dataFormBook));
     }
 
-    createBooksFragmet(books) {
+    static createBooksFragmet(books) {
         return books.reduce((acc, books) => acc + Books.createElement(books), '');
     }
 
@@ -97,11 +160,12 @@ class Books {
                     <td>${pages}</td>
                     <td>${amount}</td>
                     <td><button data-btn="edit-book">Edit</button></td>
+                    <td><button data-btn="delete-book">Delete</button></td>
                 </tr>`
     }
 
     renderBooks(books = []) {
-        Books.CONTAINER.innerHTML = this.createBooksFragmet(books);
+        Books.CONTAINER.innerHTML = Books.createBooksFragmet(books);
     }
 
     renderSortBooksTable(sortValue) {
@@ -133,29 +197,40 @@ class Books {
         this.renderBooks(searchRows);
     }
 
-    editBook(bookID) {
-        this.isEdit = true;
-        this.editBookId = bookID;
-
-        const book = this.books.find(el => +el.id === +bookID);
-        this.form.setDataForm(book);
-
-        Books.SHOW_FORM_BTN.innerText = 'Close';
-        this.form.bookForm.classList.add('show');
-    }
-
     renderEditBook() {
         const dataBooks = this.form.getDataForm();
 
         delete dataBooks.id;
-        this.books = this.books.map(el => {
-            return +el.id === +this.editBookId ? {...el, ...dataBooks} : el;
-        });
 
-        const row = Books.createElement({
-            id: this.editBookId,
-            ...dataBooks
-        })
+        try{
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('PUT', `${Books.URL_BOOKS}/${bookID}`);
+
+            xhr.addEventListener('load', ()=> {
+                JSON.parse(xhr.responseText).id
+            });
+
+            xhr.addEventListener('error', (e)=> {
+                console.log('edit problem', e);
+            });
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.send(JSON.stringify({...dataBooks}));
+
+        }catch (e) {
+            console.log('edit error', e);
+        }
+
+        // this.books = this.books.map(el => {
+        //     return +el.id === +this.editBookId ? {...el, ...dataBooks} : el;
+        // });
+        //
+        // const row = Books.createElement({
+        //     id: this.editBookId,
+        //     ...dataBooks
+        // })
 
         this.editRow.remove();
         Books.CONTAINER.insertAdjacentHTML('afterbegin', row);
@@ -166,8 +241,6 @@ class Books {
     }
 
     changeBookAmount(id, action) {
-
-        console.log(id, action);
 
         this.books.map(book => {
             return +id === +book.id ?
