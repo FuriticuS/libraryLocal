@@ -25,25 +25,25 @@ class Visitors {
         this.form.visitorsForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            if(this.isEdit){
-               this.renderEditVisitor();
-               return;
+            if (this.isEdit) {
+                this.renderEditVisitor();
+                return;
             }
 
             this.addNewVisitor();
 
         });
 
-        Visitors.SORT_VISITORS_BTN.addEventListener('click', () =>{
-           this.renderSortVisitors(Visitors.SORT_VISITORS_SELECT.value);
+        Visitors.SORT_VISITORS_BTN.addEventListener('click', () => {
+            this.renderSortVisitors(Visitors.SORT_VISITORS_SELECT.value);
         });
 
-        Visitors.SEARCH_VISITORS_INPUT.addEventListener('input', () =>{
-           this.renderSearchVisitors(Visitors.SEARCH_VISITORS_INPUT.value);
+        Visitors.SEARCH_VISITORS_INPUT.addEventListener('input', () => {
+            this.renderSearchVisitors(Visitors.SEARCH_VISITORS_INPUT.value);
         });
 
-        Visitors.VISITOR_CONTAINER.addEventListener('click', ({target}) =>{
-            if(target.dataset.btn === 'edit-visitor'){
+        Visitors.VISITOR_CONTAINER.addEventListener('click', ({target}) => {
+            if (target.dataset.btn === 'edit-visitor') {
                 const visitorRow = target.closest('[data-id]');
 
                 this.editRow = visitorRow;
@@ -104,10 +104,10 @@ class Visitors {
                 </tr>`
     }
 
-    renderSortVisitors(sortValueVisitor){
+    renderSortVisitors(sortValueVisitor) {
         let sortedVisitorsRow = Array.from(Visitors.VISITOR_CONTAINER.rows)
-            .sort( (rowA, rowB) =>{
-                if(sortValueVisitor === '0' || sortValueVisitor === '2'){
+            .sort((rowA, rowB) => {
+                if (sortValueVisitor === '0' || sortValueVisitor === '2') {
                     return +rowA.cells[sortValueVisitor].textContent - +rowB.cells[sortValueVisitor].textContent
                 } else {
                     return rowA.cells[sortValueVisitor].textContent > rowB.cells[sortValueVisitor].textContent ?
@@ -118,18 +118,18 @@ class Visitors {
         Visitors.VISITOR_CONTAINER.append(...sortedVisitorsRow);
     }
 
-    renderSearchVisitors(searchValue){
-        let renderSearchVisitors = this.visitors.filter( visitor => {
+    renderSearchVisitors(searchValue) {
+        let renderSearchVisitors = this.visitors.filter(visitor => {
             console.log(searchValue);
             return visitor.name.includes(searchValue)
-            || visitor.phone.includes(searchValue)
-            || visitor.id === +searchValue
+                || visitor.phone.includes(searchValue)
+                || visitor.id === +searchValue
         });
 
         this.renderVisitor(renderSearchVisitors);
     }
 
-    editVisitor(editVisitorID){
+    editVisitor(editVisitorID) {
         this.isEdit = true;
         this.editVisitorID = editVisitorID;
 
@@ -141,11 +141,11 @@ class Visitors {
         this.form.setDataForm(visitor);
     };
 
-    renderEditVisitor(){
+    renderEditVisitor() {
         const dataVisitor = this.form.getDataForm();
 
         delete dataVisitor.id;
-        this.visitors = this.visitors.map( el =>{
+        this.visitors = this.visitors.map(el => {
             return +el.id === +this.editVisitorID ? {...el, ...dataVisitor} : el;
         })
 

@@ -37,9 +37,10 @@ let books;
 let visitors;
 let cards;
 let statistic;
+let url = 'https://614252674d16670017ba2d08.mockapi.io/';
 
 window.addEventListener('DOMContentLoaded', () => {
-    books = new Books();
+    books = new Books(url);
     visitors = new Visitors();
     cards = new Cards(books, visitors.visitors);
     statistic = new StatisticBooks(cards);
