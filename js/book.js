@@ -64,7 +64,6 @@ class Books {
     }
 
     booksInfo(method, url, textError){
-
         return new Promise((resolve, reject) => {
 
             let xhr = new XMLHttpRequest();
@@ -85,50 +84,18 @@ class Books {
     }
 
     getBooks(render) {
-        // try {
-        //     const xhr = new XMLHttpRequest();
-        //
-        //     xhr.open('GET', this.urlBooks);
-        //
-        //     xhr.addEventListener('load', () => {
-        //         render(JSON.parse(xhr.responseText));
-        //     });
-        //
-        //     xhr.addEventListener('error', (e) => {
-        //         console.log('error load books', e);
-        //     });
-        //
-        //     xhr.send();
-        //
-        // } catch (error) {
-        //     console.log('Get books', error, );
-        // }
-
         this.booksInfo('GET', this.urlBooks, 'error load books')
             .then(response => render(response))
             .catch(error => console.log(error));
     }
 
     deleteBooks(id) {
-        try {
-            const xhr = new XMLHttpRequest();
-
-            xhr.open('Delete', `${this.urlBooks}/${id}`);
-
-            xhr.addEventListener('load', () => {
-                const idBook = JSON.parse(xhr.responseText).id;
-                this.deleteBook(idBook);
-            });
-
-            xhr.addEventListener('error', (e) => {
-                console.log('delete problem', e);
-            });
-
-            xhr.send();
-
-        } catch (e) {
-            console.log('delete error', e);
-        }
+        this.booksInfo('Delete', `${this.urlBooks}/${id}`, 'error delete book' )
+            .then(response => {
+                const bookId = response.id;
+                this.deleteBook(bookId);
+            })
+            .catch(error => console.log(error));
 
     }
 
@@ -140,25 +107,12 @@ class Books {
         this.isEdit = true;
         this.editBookId = bookID;
 
-        try {
-            const xhr = new XMLHttpRequest();
-
-            xhr.open('GET', `${this.urlBooks}/${bookID}`);
-
-            xhr.addEventListener('load', () => {
-                const idBook = JSON.parse(xhr.responseText);
+        this.booksInfo('GET', `${this.urlBooks}/${bookID}`, 'edit problem')
+            .then(response => {
+                const idBook = response;
                 this.form.setDataForm(idBook);
             })
-
-            xhr.addEventListener('error', (e) => {
-                console.log('edit problem', e);
-            });
-
-            xhr.send();
-
-        } catch (e) {
-            console.log(e)
-        }
+            .catch(error => console.log(error));
 
         Books.SHOW_FORM_BTN.innerText = 'Close';
         this.form.bookForm.classList.add('show');
