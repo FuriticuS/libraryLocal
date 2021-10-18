@@ -160,7 +160,6 @@ class Visitors {
         this.isEdit = false;
         this.editRow = null;
         this.editVisitorID = null;
-
     };
 
     setToLocalStorage() {
