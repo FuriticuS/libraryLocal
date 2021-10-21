@@ -10,6 +10,9 @@ class Visitors {
         this.visitors = [];
         this.form = new FormVisitors();
 
+        //url books
+        this.urlVisitors = url + 'visitors';
+
         this.isEdit = false;
         this.editRow = null;
         this.editVisitorID = null;
@@ -18,8 +21,9 @@ class Visitors {
     }
 
     init() {
-        this.visitors = JSON.parse(localStorage.getItem('visitors')) || [];
-
+        //this.visitors = JSON.parse(localStorage.getItem('visitors')) || [];
+        this.visitors = this.getVisitors(this.urlVisitors, 'GET', '', 'Error GET Visitors');
+        console.log(this.visitors);
         this.showFormVisitors();
 
         this.form.visitorsForm.addEventListener('submit', (e) => {
@@ -52,6 +56,33 @@ class Visitors {
         })
 
         this.renderVisitor(this.visitors);
+    }
+
+    getVisitors(url, method, body, error){
+       try{
+           let options = {};
+
+           if(body !== ''){
+               options = {
+                   method,
+                   headers: {'Content-Type': 'application/json'},
+                   body,
+                   error
+               }
+           }
+
+           let request = fetch(url, options);
+           request
+               .then(response => response.json())
+               .then(el => {
+                   console.log(el);
+                   return el
+               })
+               .catch(error => console.log(error));
+
+       } catch(e){
+           console.log(e);
+       }
     }
 
     showFormVisitors() {

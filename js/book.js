@@ -63,7 +63,7 @@ class Books {
         })
     }
 
-    booksInfo(method, url, textError){
+    booksInfo(method, data, url, textError){
         return new Promise((resolve, reject) => {
 
             let xhr = new XMLHttpRequest();
@@ -78,19 +78,19 @@ class Books {
                 reject(new Error(textError));
             };
 
-            xhr.send();
+            xhr.send(JSON.stringify(data));
         });
 
     }
 
     getBooks(render) {
-        this.booksInfo('GET', this.urlBooks, 'error load books')
+        this.booksInfo('GET', '',this.urlBooks, 'error load books')
             .then(response => render(response))
             .catch(error => console.log(error));
     }
 
     deleteBooks(id) {
-        this.booksInfo('Delete', `${this.urlBooks}/${id}`, 'error delete book' )
+        this.booksInfo('Delete', '',`${this.urlBooks}/${id}`, 'error delete book' )
             .then(response => {
                 const bookId = response.id;
                 this.deleteBook(bookId);
@@ -107,7 +107,7 @@ class Books {
         this.isEdit = true;
         this.editBookId = bookID;
 
-        this.booksInfo('GET', `${this.urlBooks}/${bookID}`, 'edit problem')
+        this.booksInfo('GET', '',`${this.urlBooks}/${bookID}`, 'edit problem')
             .then(response => {
                 const idBook = response;
                 this.form.setDataForm(idBook);
@@ -144,25 +144,12 @@ class Books {
         }
 
         //request POST add books
-        try {
-            const xhr = new XMLHttpRequest();
-
-            xhr.open('POST', `${this.urlBooks}`);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-
-            xhr.addEventListener('load', () => {
-                dataFormBook = JSON.parse(xhr.responseText);
+        this.booksInfo('POST', dataFormBook, this.urlBooks,'error = add book problem')
+            .then(response => {
+                dataFormBook = response;
                 Books.CONTAINER.insertAdjacentHTML('afterbegin', Books.createElement(dataFormBook));
             })
-
-            xhr.addEventListener('error', (e) => {
-                console.log('add book problem', e);
-            });
-
-            xhr.send(JSON.stringify(dataFormBook));
-        } catch (e) {
-            console.log(e);
-        }
+            .catch(error => console.log(error));
 
         this.form.bookForm.classList.remove('show');
         Books.SHOW_FORM_BTN.innerText = 'Add Book';
@@ -278,10 +265,6 @@ class Books {
         });
 
         this.renderBooks(this.books);
-    }
-
-    setToLocalStorage() {
-        localStorage.setItem('books', JSON.stringify(this.books))
     }
 }
 
