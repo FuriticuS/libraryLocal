@@ -20,11 +20,10 @@ class Visitors {
         this.init();
     }
 
-    init() {
-        //this.visitors = JSON.parse(localStorage.getItem('visitors')) || [];
-        this.visitors = this.getVisitors(this.urlVisitors, 'GET', '', 'Error GET Visitors');
-        console.log(this.visitors);
-        this.showFormVisitors();
+    async init() {
+        this.visitors = await this.getVisitors('GET', null , this.urlVisitors, 'Error GET Visitors') || [];
+
+        await this.showFormVisitors();
 
         this.form.visitorsForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -49,7 +48,6 @@ class Visitors {
         Visitors.VISITOR_CONTAINER.addEventListener('click', ({target}) => {
             if (target.dataset.btn === 'edit-visitor') {
                 const visitorRow = target.closest('[data-id]');
-
                 this.editRow = visitorRow;
                 this.editVisitor(this.editRow.dataset.id);
             }
@@ -58,30 +56,23 @@ class Visitors {
         this.renderVisitor(this.visitors);
     }
 
-    getVisitors(url, method, body, error){
+    async getVisitors( method, body, url, error){
        try{
-           let options = {};
-
-           if(body !== ''){
-               options = {
-                   method,
-                   headers: {'Content-Type': 'application/json'},
-                   body,
-                   error
-               }
+           const options = {
+               method,
+               headers: {'Content-Type': 'application/json'},
            }
 
-           let request = fetch(url, options);
-           request
-               .then(response => response.json())
-               .then(el => {
-                   console.log(el);
-                   return el
-               })
-               .catch(error => console.log(error));
+           if(body) {
+               options.body = body;
+           }
+
+           let request = await fetch(url, options);
+           request = await request.json();
+           return await request;
 
        } catch(e){
-           console.log(e);
+           console.log(error);
        }
     }
 
@@ -98,8 +89,8 @@ class Visitors {
         })
     }
 
-    addNewVisitor() {
-        const dataFormVisitor = this.form.getDataForm();
+    async addNewVisitor() {
+        let dataFormVisitor = JSON.stringify(this.form.getDataForm());
         // form visitors validation
         if (!Object.values(dataFormVisitor).every(el => el)) {
             Array.from(this.form.visitorsForm).forEach(el => {
@@ -110,12 +101,16 @@ class Visitors {
             return
         }
 
-        this.visitors.push(dataFormVisitor);
+        //request POST add visitors
+        await this.getVisitors('POST', dataFormVisitor, this.urlVisitors, 'error Post request')
+            .then(response => {
+                dataFormVisitor = response;
+                Visitors.VISITOR_CONTAINER.insertAdjacentHTML('afterbegin', Visitors.createElementVisitors(dataFormVisitor));
+            })
+            .catch(e => console.log(e));
 
         this.form.visitorsForm.classList.remove('show');
         Visitors.SHOW_VISITORS_FORM_BTN.innerText = 'Add Visitor';
-
-        Visitors.VISITOR_CONTAINER.insertAdjacentHTML('afterbegin', Visitors.createElementVisitors(dataFormVisitor));
     }
 
     renderVisitor(visitors = []) {
@@ -205,7 +200,6 @@ class FormVisitors {
 
     getDataForm() {
         return {
-            id: Math.floor(Math.random() * 1000),
             name: this.getNameVisitor,
             phone: this.getPhoneNumber
         }
