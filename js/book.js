@@ -70,9 +70,12 @@ class Books {
 
             xhr.open(method, url);
 
+            xhr.setRequestHeader('Content-type' , 'application/json');
+
             xhr.addEventListener('load', () => {
                 resolve(JSON.parse(xhr.responseText));
             });
+
 
             xhr.onerror = function () {
                 reject(new Error(textError));
@@ -209,28 +212,13 @@ class Books {
     renderEditBook(editBookElement) {
         let dataBooks = this.form.getDataForm();
 
-        try {
-            const xhr = new XMLHttpRequest();
-
-            xhr.open('PUT', `${this.urlBooks}/${this.editBookId}`);
-
-            xhr.addEventListener('load', () => {
-                const idEditBook = JSON.parse(xhr.responseText).id;
-                dataBooks = JSON.parse(xhr.responseText);
+        this.booksInfo('PUT', dataBooks, `${this.urlBooks}/${this.editBookId}`, 'edit error')
+            .then(response => {
+                let idEditBook = response.id;
+                dataBooks = response;
                 this.editBookElement(idEditBook, dataBooks);
-            });
-
-            xhr.addEventListener('error', (e) => {
-                console.log('edit problem', e);
-            });
-
-            xhr.setRequestHeader('Content-Type', 'application/json');
-
-            xhr.send(JSON.stringify(dataBooks));
-
-        } catch (e) {
-            console.log('edit error', e);
-        }
+            })
+            .catch( error => console.log(error));
     }
 
     editBookElement(idEditBook, dataBooks) {
